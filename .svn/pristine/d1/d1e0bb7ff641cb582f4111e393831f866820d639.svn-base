@@ -1,0 +1,50 @@
+# Yang Zhenyu 519021910390
+# sum_list
+
+    .pos 0
+init:
+    irmovq Stack, %rsp
+    irmovq Stack, %rbp
+    jmp Main
+
+    .align 8
+ele1:
+    .quad 0x00a
+    .quad ele2
+ele2:
+    .quad 0x0b0
+    .quad ele3
+ele3:
+    .quad 0xc00
+    .quad 0
+
+Main:
+    irmovq ele1, %rdi
+    pushq %rdi  # Push ele1
+    call sum_list   # sum_list(ele1)
+    halt
+
+    # init sum_list
+sum_list:
+    pushq %rbp
+    rrmovq %rsp, %rbp
+    mrmovq 16(%rbp), %rcx   # rcx = ele1
+    irmovq $0, %rax    # sum = 0
+    andq %rcx, %rcx
+    je End
+
+Loop:
+    mrmovq (%rcx), %rsi # get val
+    addq %rsi, %rax # add val to sum
+    mrmovq 8(%rcx), %rcx    # p = p->next
+    andq %rcx, %rcx
+    jne Loop
+
+End:
+    popq %rbp
+    ret
+
+    .pos 0x200
+Stack:
+
+

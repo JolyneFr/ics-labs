@@ -1,0 +1,50 @@
+                            | # Yang Zhenyu 519021910390
+                            | # sum_list
+                            | 
+0x000:                      |     .pos 0
+0x000:                      | init:
+0x000: 30f40002000000000000 |     irmovq Stack, %rsp
+0x00a: 30f50002000000000000 |     irmovq Stack, %rbp
+0x014: 705000000000000000   |     jmp Main
+                            | 
+0x020:                      |     .align 8
+0x020:                      | ele1:
+0x020: 0a00000000000000     |     .quad 0x00a
+0x028: 3000000000000000     |     .quad ele2
+0x030:                      | ele2:
+0x030: b000000000000000     |     .quad 0x0b0
+0x038: 4000000000000000     |     .quad ele3
+0x040:                      | ele3:
+0x040: 000c000000000000     |     .quad 0xc00
+0x048: 0000000000000000     |     .quad 0
+                            | 
+0x050:                      | Main:
+0x050: 30f72000000000000000 |     irmovq ele1, %rdi
+0x05a: a07f                 |     pushq %rdi  # Push ele1
+0x05c: 806600000000000000   |     call sum_list   # sum_list(ele1)
+0x065: 00                   |     halt
+                            | 
+                            |     # init sum_list
+0x066:                      | sum_list:
+0x066: a05f                 |     pushq %rbp
+0x068: 2045                 |     rrmovq %rsp, %rbp
+0x06a: 50151000000000000000 |     mrmovq 16(%rbp), %rcx   # rcx = ele1
+0x074: 30f00000000000000000 |     irmovq $0, %rax    # sum = 0
+0x07e: 6211                 |     andq %rcx, %rcx
+0x080: 73aa00000000000000   |     je End
+                            | 
+0x089:                      | Loop:
+0x089: 50610000000000000000 |     mrmovq (%rcx), %rsi # get val
+0x093: 6060                 |     addq %rsi, %rax # add val to sum
+0x095: 50110800000000000000 |     mrmovq 8(%rcx), %rcx    # p = p->next
+0x09f: 6211                 |     andq %rcx, %rcx
+0x0a1: 748900000000000000   |     jne Loop
+                            | 
+0x0aa:                      | End:
+0x0aa: b05f                 |     popq %rbp
+0x0ac: 90                   |     ret
+                            | 
+0x200:                      |     .pos 0x200
+0x200:                      | Stack:
+                            | 
+                            | 

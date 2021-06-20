@@ -1,0 +1,55 @@
+# Yang Zhenyu 519021910390
+# copy_block
+
+    .pos 0
+init:
+    irmovq Stack, %rsp
+    irmovq Stack, %rbp
+    jmp Main
+
+    .align 8
+# Source block
+src:
+    .quad 0x00a
+    .quad 0x0b0
+    .quad 0xc00
+# Destination block
+dest:
+    .quad 0x111
+    .quad 0x222
+    .quad 0x333
+
+Main:
+    irmovq src, %rdi
+    irmovq dest, %rsi
+    irmovq $3, %rdx
+    call copy_block
+    halt
+
+copy_block:
+    pushq %rbp
+    rrmovq %rdi, %rbx # rbx = src
+    rrmovq %rsi, %rcx # rcx = dest
+    rrmovq %rdx, %r8 # r8 = len
+    irmovq $1, %rbp # rbp = 1
+    irmovq $0, %rax # result = 0
+    andq %r8, %r8
+    je End
+    
+Loop:
+    mrmovq (%rbx), %r9 # r9 = val
+    irmovq $8, %r10 # r10 = 8
+    addq %r10, %rbx # src++
+    rmmovq %r9, (%rcx) # *dest = val
+    addq %r10, %rcx # dest++
+    xorq %r9, %rax
+    subq %rbp, %r8
+    andq %r8, %r8
+    jne Loop
+
+End:
+    popq %rbp
+    ret
+
+    .pos 0x200
+Stack:

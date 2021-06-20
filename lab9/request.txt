@@ -1,0 +1,5 @@
+GET http://127.0.0.1:35059/ HTTP/1.1
+Accept-Charset: utf-8
+Host: www.google.com
+Connection: close
+Accept: application/octet-stream
